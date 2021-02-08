@@ -39,7 +39,7 @@ router.get('/review', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     if (!coinInDb) {
         const response = yield axios_1.default.get('https://api.binance.com/api/v3/exchangeInfo');
         const symbols = response.data.symbols;
-        const found = symbols.find((sym) => sym.baseAsset === symbol);
+        const found = symbols.find((sym) => sym.symbol === symbol);
         console.log('found=', found);
         if (found) {
             yield notifyUsers();

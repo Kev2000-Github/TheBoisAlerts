@@ -27,7 +27,7 @@ router.get('/review', async (req, res) => {
     if (!coinInDb) {
         const response = await axios.get('https://api.binance.com/api/v3/exchangeInfo')
         const symbols = response.data.symbols
-        const found = symbols.find((sym) => sym.baseAsset === symbol)
+        const found = symbols.find((sym) => sym.symbol === symbol)
         console.log('found=', found);
         if (found) {
             await notifyUsers()
