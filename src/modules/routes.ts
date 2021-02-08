@@ -66,11 +66,15 @@ const findUserTokens = async () => {
 }
 
 router.post('/user/:token', async (req, res) => {
+    console.log('post user');
     const token = req.params.token;
     const user = await findToken(token);
+    console.log('user found=', user);
     if (!user) {
         await User.query().insert({ fireBaseToken: token });
     }
+    console.log('sending true');
+    
     res.send(true);
 })
 

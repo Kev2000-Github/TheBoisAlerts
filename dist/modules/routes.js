@@ -69,10 +69,13 @@ const findUserTokens = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield User_1.User.query().from('User');
 });
 router.post('/user/:token', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('post user');
     const token = req.params.token;
     const user = yield findToken(token);
+    console.log('user found=', user);
     if (!user) {
         yield User_1.User.query().insert({ fireBaseToken: token });
     }
+    console.log('sending true');
     res.send(true);
 }));
