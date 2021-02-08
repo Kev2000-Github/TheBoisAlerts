@@ -7,6 +7,10 @@ async function findToken(fireBaseToken) {
     return await User.query().findOne("fireBaseToken", fireBaseToken);
 }
 
+//PARA SABER QUE FUNCIONA EN HEROKU
+router.get('/', async (req, res) => {
+    res.send("HOME");
+})
 router.post('/user/:token', async (req, res) => {
     const token = req.params.token;
     const user = await findToken(token);
