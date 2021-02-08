@@ -63,7 +63,7 @@ const addSymbolToDb = async (sym: string, baseAsset: string, quoteAsset: string)
 }
 
 const findSymbolInDb = async (sym: string) => {
-    return await User.query().findById(sym)?.[0]
+    return await Symbol.query().findById(sym)?.[0]
 }
 
 const findUserTokens = async () => {
