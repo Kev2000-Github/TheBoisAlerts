@@ -1,6 +1,8 @@
 import express from 'express';
 import { httpCodes } from '../utils/httpResponseCodes';
 import { User } from '../database/User';
+import { Symbol } from '../database/Symbol';
+import axios from 'axios';
 
 const router = express.Router();
 
@@ -12,11 +14,57 @@ async function findToken(fireBaseToken) {
 router.get('/', async (req, res) => {
     res.send("HOME");
 })
+
+const symbol = 'SFP'
+
 router.get('/review', async (req, res) => {
     console.log("reviewing at", new Date());
-    
+
+    const coinInDb = await findSymbolInDb(symbol)
+    if (!coinInDb) {
+        const response = await axios.get('https://api.binance.com/api/v3/exchangeInfo')
+        const symbols = response.data.symbols
+        const found = symbols.find((sym) => sym.baseAsset === symbol)
+        console.log('found=', found);
+        if (found) {
+            await notifyUsers()
+            await addSymbolToDb(found.symbol, found.baseAsset, found.quoteAsset)
+        }
+    }
+
     res.send("Review here!");
 })
+
+
+const options = {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': process.env.SERVER_KEY
+    }
+};
+
+const notifyUsers = async () => {
+    const tokens = await findUserTokens()
+
+    return await axios.post('https://fcm.googleapis.com/fcm/send', {
+        data: { title: "New token has been listed!" },
+        registration_ids: tokens,
+        priority: 'high'
+    }, options);
+}
+
+const addSymbolToDb = async (sym: string, baseAsset: string, quoteAsset: string) => {
+    return await Symbol.query().insert({ symbol: sym, baseAsset, quoteAsset })
+}
+
+const findSymbolInDb = async (sym: string) => {
+    return await User.query().findById(sym)?.[0]
+}
+
+const findUserTokens = async () => {
+    return await User.query().from('User')
+}
+
 router.post('/user/:token', async (req, res) => {
     const token = req.params.token;
     const user = await findToken(token);
