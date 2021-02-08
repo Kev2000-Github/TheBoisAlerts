@@ -15,11 +15,14 @@ router.get('/', async (req, res) => {
     res.send("HOME");
 })
 
-const symbol = 'SFP'
+// const symbol = 'SFP'
 
 router.get('/review', async (req, res) => {
-    console.log("reviewing at", new Date());
+    const symbol = req.query.symbol
+    console.log("reviewing at", new Date(), symbol);
+    if (!symbol || symbol === "") return
 
+    //@ts-ignore
     const coinInDb = await findSymbolInDb(symbol)
     if (!coinInDb) {
         const response = await axios.get('https://api.binance.com/api/v3/exchangeInfo')
@@ -66,15 +69,11 @@ const findUserTokens = async () => {
 }
 
 router.post('/user/:token', async (req, res) => {
-    console.log('post user');
     const token = req.params.token;
     const user = await findToken(token);
-    console.log('user found=', user);
     if (!user) {
         await User.query().insert({ fireBaseToken: token });
     }
-    console.log('sending true');
-    
     res.send(true);
 })
 

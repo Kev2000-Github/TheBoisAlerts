@@ -28,9 +28,13 @@ function findToken(fireBaseToken) {
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send("HOME");
 }));
-const symbol = 'SFP';
+// const symbol = 'SFP'
 router.get('/review', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("reviewing at", new Date());
+    const symbol = req.query.symbol;
+    console.log("reviewing at", new Date(), symbol);
+    if (!symbol || symbol === "")
+        return;
+    //@ts-ignore
     const coinInDb = yield findSymbolInDb(symbol);
     if (!coinInDb) {
         const response = yield axios_1.default.get('https://api.binance.com/api/v3/exchangeInfo');
@@ -69,13 +73,10 @@ const findUserTokens = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield User_1.User.query().from('User');
 });
 router.post('/user/:token', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('post user');
     const token = req.params.token;
     const user = yield findToken(token);
-    console.log('user found=', user);
     if (!user) {
         yield User_1.User.query().insert({ fireBaseToken: token });
     }
-    console.log('sending true');
     res.send(true);
 }));
