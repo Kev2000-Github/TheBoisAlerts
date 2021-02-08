@@ -1,5 +1,4 @@
 import express from 'express';
-import { httpCodes } from '../utils/httpResponseCodes';
 import { User } from '../database/User';
 import { Symbol } from '../database/Symbol';
 import axios from 'axios';
@@ -24,6 +23,8 @@ router.get('/review', async (req, res) => {
 
     //@ts-ignore
     const coinInDb = await findSymbolInDb(symbol)
+    console.log('coin in db=', coinInDb);
+
     if (!coinInDb) {
         const response = await axios.get('https://api.binance.com/api/v3/exchangeInfo')
         const symbols = response.data.symbols
@@ -39,10 +40,12 @@ router.get('/review', async (req, res) => {
 })
 
 
-const options = {
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': process.env.SERVER_KEY
+const options = (serverKey?: string) => {
+    return {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': serverKey
+        }
     }
 };
 
@@ -54,7 +57,7 @@ const notifyUsers = async () => {
         data: { title: "New token has been listed!" },
         registration_ids: tokens,
         priority: 'high'
-    }, options);
+    }, options(process.env.SERVER_KEY));
     console.log('response = ', googleResponse);
 }
 
@@ -63,7 +66,8 @@ const addSymbolToDb = async (sym: string, baseAsset: string, quoteAsset: string)
 }
 
 const findSymbolInDb = async (sym: string) => {
-    return await Symbol.query().findById(sym)?.[0]
+    const values = await Symbol.query().findById(sym)
+    return values
 }
 
 const findUserTokens = async () => {
