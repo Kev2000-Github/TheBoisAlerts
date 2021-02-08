@@ -1,9 +1,12 @@
-CREATE DATABASE IF NOT EXISTS TheBois;
+CREATE TABLE IF NOT EXISTS TheBois;
 USE TheBois;
 
 
 CREATE TABLE IF NOT EXISTS User
 (
-    fireBaseToken VARCHAR(300) NOT NULL,
+    fireBaseToken VARCHAR(300) PRIMARY KEY NOT NULL,
     createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 );
+
+POST /user/{token}
+guardar en User el token pasado, responder true si no da error
