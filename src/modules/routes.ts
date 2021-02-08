@@ -1,9 +1,10 @@
 import express from 'express';
 import { User } from '../database/User';
 import { Symbol } from '../database/Symbol';
+import { Chat } from '../database/Chat';
 import axios from 'axios';
 import { bot, chatId } from './bot';
-
+import _ from 'lodash';
 const router = express.Router();
 
 async function findToken(fireBaseToken) {
@@ -52,13 +53,20 @@ const options = (serverKey?: string) => {
 const notifyUsers = async () => {
     const tokens = await findUserTokens()
     console.log('notifyusers=', tokens);
-    bot.sendMessage(chatId, "New token has been listed!\n");
+    notifyTelegramUsers();
     const googleResponse = await axios.post('https://fcm.googleapis.com/fcm/send', {
         data: { title: "New token has been listed!" },
         registration_ids: tokens,
         priority: 'high'
     }, options(process.env.SERVER_KEY));
     console.log('response = ', googleResponse);
+}
+
+const notifyTelegramUsers = async () => {
+    let chats = await Chat.query();
+    chats.forEach(chat => {
+        bot.sendMessage(chat['chatId'], "New token has been listed!\n");
+    })
 }
 
 const addSymbolToDb = async (sym: string, baseAsset: string, quoteAsset: string) => {
