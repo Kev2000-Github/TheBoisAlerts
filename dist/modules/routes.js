@@ -70,7 +70,7 @@ const findSymbolInDb = (sym) => __awaiter(void 0, void 0, void 0, function* () {
     return yield ((_a = User_1.User.query().findById(sym)) === null || _a === void 0 ? void 0 : _a[0]);
 });
 const findUserTokens = () => __awaiter(void 0, void 0, void 0, function* () {
-    return yield User_1.User.query().from('User');
+    return (yield User_1.User.query().from('User')).map((user) => user.fireBaseToken);
 });
 router.post('/user/:token', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.params.token;

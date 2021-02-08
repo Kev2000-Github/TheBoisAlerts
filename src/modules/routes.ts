@@ -65,7 +65,7 @@ const findSymbolInDb = async (sym: string) => {
 }
 
 const findUserTokens = async () => {
-    return await User.query().from('User')
+    return (await User.query().from('User')).map((user) => user.fireBaseToken)
 }
 
 router.post('/user/:token', async (req, res) => {
