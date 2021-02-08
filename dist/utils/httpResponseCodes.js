@@ -1,18 +1,18 @@
-export const httpCodes = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.httpCodes = void 0;
+exports.httpCodes = {
     // Informational
     CONTINUE: 100,
     SWITCHING_PROTOCOLS: 101,
     PROCESSING: 102,
-
     // Success
     OK: 200,
     CREATED: 201,
-
     // Redirection
     MOVED_PERMANENTLY: 301,
     NOT_MODIFIED: 304,
     TEMPORARY_REDIRECT: 307,
-
     // Client Errors
     BAD_REQUEST: 400,
     UNAUTHORIZED: 401,
@@ -20,7 +20,6 @@ export const httpCodes = {
     NOT_FOUND: 404,
     CONFLICT: 409,
     UNPROCESSABLE_ENTITY: 422,
-
     // Server Errors
     INTERNAL_SERVER_ERROR: 500,
     NOT_IMPLEMENTED: 501,

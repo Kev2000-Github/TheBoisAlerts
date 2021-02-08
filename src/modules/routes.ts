@@ -1,4 +1,5 @@
 import express from 'express';
+import { httpCodes } from '../utils/httpResponseCodes';
 import { User } from '../database/User';
 
 const router = express.Router();
@@ -15,7 +16,7 @@ router.post('/user/:token', async (req, res) => {
     const token = req.params.token;
     const user = await findToken(token);
     if (user) {
-        res.send({ "Error": "TOKEN ALREADY EXISTS" });
+        res.send({ "code": httpCodes.CONFLICT, "Error": "TOKEN ALREADY EXISTS" });
         return;
     }
     const insertedToken = await User.query().insert({ fireBaseToken: token });
