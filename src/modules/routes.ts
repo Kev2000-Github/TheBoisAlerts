@@ -68,11 +68,9 @@ const findUserTokens = async () => {
 router.post('/user/:token', async (req, res) => {
     const token = req.params.token;
     const user = await findToken(token);
-    if (user) {
-        res.send({ "code": httpCodes.CONFLICT, "Error": "TOKEN ALREADY EXISTS" });
-        return;
+    if (!user) {
+        await User.query().insert({ fireBaseToken: token });
     }
-    const insertedToken = await User.query().insert({ fireBaseToken: token });
     res.send(true);
 })
 
