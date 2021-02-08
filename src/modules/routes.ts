@@ -48,12 +48,14 @@ const options = {
 
 const notifyUsers = async () => {
     const tokens = await findUserTokens()
+    console.log('notifyusers=', tokens);
 
-    return await axios.post('https://fcm.googleapis.com/fcm/send', {
+    const googleResponse = await axios.post('https://fcm.googleapis.com/fcm/send', {
         data: { title: "New token has been listed!" },
         registration_ids: tokens,
         priority: 'high'
     }, options);
+    console.log('response = ', googleResponse);
 }
 
 const addSymbolToDb = async (sym: string, baseAsset: string, quoteAsset: string) => {

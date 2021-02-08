@@ -56,11 +56,13 @@ const options = {
 };
 const notifyUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const tokens = yield findUserTokens();
-    return yield axios_1.default.post('https://fcm.googleapis.com/fcm/send', {
+    console.log('notifyusers=', tokens);
+    const googleResponse = yield axios_1.default.post('https://fcm.googleapis.com/fcm/send', {
         data: { title: "New token has been listed!" },
         registration_ids: tokens,
         priority: 'high'
     }, options);
+    console.log('response = ', googleResponse);
 });
 const addSymbolToDb = (sym, baseAsset, quoteAsset) => __awaiter(void 0, void 0, void 0, function* () {
     return yield Symbol_1.Symbol.query().insert({ symbol: sym, baseAsset, quoteAsset });
