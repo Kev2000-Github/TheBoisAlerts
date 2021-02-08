@@ -36,6 +36,7 @@ router.get('/review', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return;
     //@ts-ignore
     const coinInDb = yield findSymbolInDb(symbol);
+    console.log('coin in db=', coinInDb);
     if (!coinInDb) {
         const response = yield axios_1.default.get('https://api.binance.com/api/v3/exchangeInfo');
         const symbols = response.data.symbols;
@@ -48,11 +49,13 @@ router.get('/review', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
     res.send("Review here!");
 }));
-const options = {
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': process.env.SERVER_KEY
-    }
+const options = (serverKey) => {
+    return {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': serverKey
+        }
+    };
 };
 const notifyUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const tokens = yield findUserTokens();
@@ -61,15 +64,16 @@ const notifyUsers = () => __awaiter(void 0, void 0, void 0, function* () {
         data: { title: "New token has been listed!" },
         registration_ids: tokens,
         priority: 'high'
-    }, options);
+    }, options(process.env.SERVER_KEY));
     console.log('response = ', googleResponse);
 });
 const addSymbolToDb = (sym, baseAsset, quoteAsset) => __awaiter(void 0, void 0, void 0, function* () {
     return yield Symbol_1.Symbol.query().insert({ symbol: sym, baseAsset, quoteAsset });
 });
 const findSymbolInDb = (sym) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    return yield ((_a = User_1.User.query().findById(sym)) === null || _a === void 0 ? void 0 : _a[0]);
+    const values = yield Symbol_1.Symbol.query().findById(sym);
+    console.log('In DB=', values);
+    return values;
 });
 const findUserTokens = () => __awaiter(void 0, void 0, void 0, function* () {
     return (yield User_1.User.query().from('User')).map((user) => user.fireBaseToken);
