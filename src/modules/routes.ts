@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 router.get('/review', async (req, res) => {
     console.log("reviewing at", new Date());
     
-    res.send("REVIEW");
+    res.send("Review here!");
 })
 router.post('/user/:token', async (req, res) => {
     const token = req.params.token;

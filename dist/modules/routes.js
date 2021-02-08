@@ -27,6 +27,10 @@ function findToken(fireBaseToken) {
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send("HOME");
 }));
+router.get('/review', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("reviewing at", new Date());
+    res.send("Review here!");
+}));
 router.post('/user/:token', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.params.token;
     const user = yield findToken(token);
