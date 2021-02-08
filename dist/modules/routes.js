@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const User_1 = require("../database/User");
 const Symbol_1 = require("../database/Symbol");
 const axios_1 = __importDefault(require("axios"));
+const bot_1 = require("./bot");
 const router = express_1.default.Router();
 exports.routes = router;
 function findToken(fireBaseToken) {
@@ -60,6 +61,7 @@ const options = (serverKey) => {
 const notifyUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const tokens = yield findUserTokens();
     console.log('notifyusers=', tokens);
+    bot_1.bot.sendMessage(bot_1.chatId, "New token has been listed!\n");
     const googleResponse = yield axios_1.default.post('https://fcm.googleapis.com/fcm/send', {
         data: { title: "New token has been listed!" },
         registration_ids: tokens,
@@ -72,7 +74,6 @@ const addSymbolToDb = (sym, baseAsset, quoteAsset) => __awaiter(void 0, void 0, 
 });
 const findSymbolInDb = (sym) => __awaiter(void 0, void 0, void 0, function* () {
     const values = yield Symbol_1.Symbol.query().findById(sym);
-    console.log('In DB=', values);
     return values;
 });
 const findUserTokens = () => __awaiter(void 0, void 0, void 0, function* () {

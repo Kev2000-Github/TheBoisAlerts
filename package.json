@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js --trace-sync-io",
     "build-tsc": "tsc -p .",
-    "dev": "rimraf dist/ && nodemon --exec ts-node src/index.ts"
+    "dev": "nodemon --exec ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "mysql": "^2.18.1",
     "nodemon": "^2.0.7",
     "objection": "^2.2.14",
+    "telebot": "^1.4.1",
     "ts-jest": "^26.5.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3"

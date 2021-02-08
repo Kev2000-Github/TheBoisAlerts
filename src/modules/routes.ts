@@ -2,6 +2,7 @@ import express from 'express';
 import { User } from '../database/User';
 import { Symbol } from '../database/Symbol';
 import axios from 'axios';
+import { bot, chatId } from './bot';
 
 const router = express.Router();
 
@@ -20,7 +21,6 @@ router.get('/review', async (req, res) => {
     const symbol = req.query.symbol
     console.log("reviewing at", new Date(), symbol);
     if (!symbol || symbol === "") return
-
     //@ts-ignore
     const coinInDb = await findSymbolInDb(symbol)
     console.log('coin in db=', coinInDb);
@@ -52,7 +52,7 @@ const options = (serverKey?: string) => {
 const notifyUsers = async () => {
     const tokens = await findUserTokens()
     console.log('notifyusers=', tokens);
-
+    bot.sendMessage(chatId, "New token has been listed!\n");
     const googleResponse = await axios.post('https://fcm.googleapis.com/fcm/send', {
         data: { title: "New token has been listed!" },
         registration_ids: tokens,
@@ -66,8 +66,8 @@ const addSymbolToDb = async (sym: string, baseAsset: string, quoteAsset: string)
 }
 
 const findSymbolInDb = async (sym: string) => {
-    const values = await Symbol.query().findById(sym)
-    return values
+    const values = await Symbol.query().findById(sym);
+    return values;
 }
 
 const findUserTokens = async () => {
