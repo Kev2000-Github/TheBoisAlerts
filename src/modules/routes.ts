@@ -12,6 +12,11 @@ async function findToken(fireBaseToken) {
 router.get('/', async (req, res) => {
     res.send("HOME");
 })
+router.get('/review', async (req, res) => {
+    console.log("reviewing at", new Date());
+    
+    res.send("REVIEW");
+})
 router.post('/user/:token', async (req, res) => {
     const token = req.params.token;
     const user = await findToken(token);
