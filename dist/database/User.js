@@ -6,3 +6,4 @@ class User extends objection_1.Model {
 }
 exports.User = User;
 User.tableName = "User";
+User.idColumn = "fireBaseToken";

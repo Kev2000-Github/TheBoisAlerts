@@ -9,6 +9,7 @@ switch (env) {
         });
         break;
     case "development":
+        console.log('require("dotenv").config();');
         require("dotenv").config();
         break;
     default:
