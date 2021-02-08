@@ -7,7 +7,7 @@ import axios from 'axios';
 const router = express.Router();
 
 async function findToken(fireBaseToken) {
-    return await User.query().findOne("fireBaseToken", fireBaseToken);
+    return await User.query().findById(fireBaseToken);
 }
 
 //PARA SABER QUE FUNCIONA EN HEROKU
